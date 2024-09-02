@@ -54,14 +54,14 @@ while True:
         # Initialize list to hold projects for the current user
         user_projects = []
 
-        # Assuming the user's attributes contain application names with projects as values
-        for attr_key, attr_value in user.get('attributes', {}).items():
-            for val in attr_value:
-                projects = [project.strip().upper() for project in val.split(',')]
-                # Filter projects, excluding those ending with @epam.com
-                filtered_projects = [project for project in projects if not project.endswith('@EPAM.COM')]
-                user_projects.extend(filtered_projects)
-                all_projects.update(filtered_projects)
+        # Process only the 'applications' attribute
+        applications = user.get('attributes', {}).get('applications', [])
+        for val in applications:
+            projects = [project.strip().upper() for project in val.split(',')]
+            # Filter projects, excluding those ending with @epam.com
+            filtered_projects = [project for project in projects if not project.endswith('@EPAM.COM')]
+            user_projects.extend(filtered_projects)
+            all_projects.update(filtered_projects)
 
         user_projects_str = ", ".join(sorted(user_projects))  # Sort projects for consistent ordering
         users_data.append({'email': email, 'last_name': last_name, 'first_name': first_name, 'projects_str': user_projects_str})
